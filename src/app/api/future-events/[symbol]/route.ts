@@ -349,7 +349,7 @@ export async function GET(
 
         console.log(`[FutureEvents] ${sym} — lastPressDate=${lastPressDate}, newReleases=${newReleases.length} (force=${forceRefresh})`);
 
-        let extractedEvents: Array<{ date: string; type: string; description: string; importance: string; sourceIndex: number }> = [];
+        let extractedEvents: Array<{ date: string; date_label?: string; type: string; description: string; importance: string; sourceIndex: number }> = [];
 
         if (newReleases.length > 0) {
             // 4) Gemini로 미래 이벤트 추출 (소스 인덱스, 중요도 포함)
