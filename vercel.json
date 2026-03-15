@@ -1,12 +1,1 @@
-{
-    "crons": [
-        {
-            "path": "/api/cron/fetch-events",
-            "schedule": "*/15 * * * *"
-        },
-        {
-            "path": "/api/cron/extract-evidence",
-            "schedule": "*/15 * * * *"
-        }
-    ]
-}
+{}
