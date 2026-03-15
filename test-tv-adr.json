@@ -1,0 +1,13 @@
+{
+    "filter": [
+        {"left": "premarket_change", "operation": "egreater", "right": 0},
+        {"left": "type", "operation": "equal", "right": "stock"},
+        {"left": "subtype", "operation": "in_range", "right": ["common", "foreign-issuer", "depositary-receipt"]}
+    ],
+    "options": {"lang": "en"},
+    "markets": ["america"],
+    "symbols": {"query": {"types": []}, "tickers": []},
+    "columns": ["name", "premarket_change", "premarket_change_abs", "change", "change_abs", "subtype"],
+    "sort": {"sortBy": "premarket_change", "sortOrder": "desc"},
+    "range": [0, 5]
+}

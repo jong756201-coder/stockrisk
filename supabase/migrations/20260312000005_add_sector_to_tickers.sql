@@ -1,0 +1,3 @@
+ALTER TABLE public.tickers 
+ADD COLUMN IF NOT EXISTS sector TEXT,
+ADD COLUMN IF NOT EXISTS industry TEXT;

@@ -1,0 +1,12 @@
+{
+    "filter": [
+        {"left": "postmarket_change", "operation": "nempty"},
+        {"left": "type", "operation": "equal", "right": "stock"}
+    ],
+    "options": {"lang": "en"},
+    "markets": ["america"],
+    "symbols": {"query": {"types": []}, "tickers": []},
+    "columns": ["name", "description", "postmarket_close", "postmarket_change"],
+    "sort": {"sortBy": "postmarket_change", "sortOrder": "desc"},
+    "range": [0, 5]
+}

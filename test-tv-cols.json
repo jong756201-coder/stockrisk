@@ -1,0 +1,12 @@
+{
+    "filter": [
+        {"left": "premarket_change", "operation": "egreater", "right": 0},
+        {"left": "type", "operation": "equal", "right": "stock"}
+    ],
+    "options": {"lang": "en"},
+    "markets": ["america"],
+    "symbols": {"query": {"types": []}, "tickers": []},
+    "columns": ["name", "premarket_change", "premarket_change_abs", "change", "change_abs"],
+    "sort": {"sortBy": "premarket_change", "sortOrder": "desc"},
+    "range": [0, 5]
+}

@@ -1,0 +1,13 @@
+{
+    "filter": [
+        {"left": "premarket_change", "operation": "egreater", "right": 0},
+        {"left": "type", "operation": "equal", "right": "stock"},
+        {"left": "premarket_close", "operation": "egreater", "right": 0.1}
+    ],
+    "options": {"lang": "en"},
+    "markets": ["america"],
+    "symbols": {"query": {"types": []}, "tickers": ["NASDAQ:TURB"]},
+    "columns": ["name", "premarket_change", "change", "subtype"],
+    "sort": {"sortBy": "premarket_change", "sortOrder": "desc"},
+    "range": [0, 5]
+}
