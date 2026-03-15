@@ -45,8 +45,8 @@ export async function addThemeTicker(
 
     revalidatePath(`/themes/${themeId}`);
     return { success: true };
-  } catch (e: any) {
-    return { success: false, error: e.message };
+  } catch (e: unknown) {
+    return { success: false, error: e instanceof Error ? e.message : '알 수 없는 오류' };
   }
 }
 
@@ -67,7 +67,7 @@ export async function removeThemeTicker(
 
     revalidatePath(`/themes/${themeId}`);
     return { success: true };
-  } catch (e: any) {
-    return { success: false, error: e.message };
+  } catch (e: unknown) {
+    return { success: false, error: e instanceof Error ? e.message : '알 수 없는 오류' };
   }
 }

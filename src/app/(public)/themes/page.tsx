@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic';
 export default async function ThemesPage() {
     const supabase = await createClient();
 
+    // eslint-disable-next-line react-hooks/purity
     const thirtyMinsAgo = new Date(Date.now() - 30 * 60000).toISOString();
 
     const { data: themes } = await supabase
@@ -47,6 +48,7 @@ export default async function ThemesPage() {
             <section>
                 <div className="grid grid-cols-2 gap-3">
                     {themes && themes.length > 0 ? (
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         themes.map((evt: any) => (
                             <Link href={`/ticker/${evt.symbol}`} key={`theme-${evt.id}`}>
                                 <div className="h-full bg-white text-black border border-gray-200 p-4 rounded-lg font-bold hover:border-orange-500 transition shadow-sm">

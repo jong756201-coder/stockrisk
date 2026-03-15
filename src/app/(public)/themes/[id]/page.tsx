@@ -98,7 +98,7 @@ export default async function ThemeDetailPage({ params }: { params: Promise<{ id
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const [{ data: roleData }, { data: pinnedRows }, universe, krwRate] = await Promise.all([
+  const [{ data: roleData }, { data: pinnedRows }, universe] = await Promise.all([
     user
       ? supabase.from('user_roles').select('role_type').eq('user_id', user.id).single()
       : Promise.resolve({ data: null }),
@@ -108,7 +108,6 @@ export default async function ThemeDetailPage({ params }: { params: Promise<{ id
       .eq('theme_id', id)
       .order('added_at', { ascending: false }),
     getTopGainersWithMeta(),
-    FMPService.getForexRate('USDKRW'),
   ]);
 
   const isAdmin = roleData?.role_type === 'admin';
