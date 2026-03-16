@@ -91,13 +91,12 @@ export default function LatestFilingCard({ symbol }: { symbol: string }) {
                 setFiling(latest.filing);
                 setSection(latest.section);
 
-                // 2) Supabase 캐시에서만 summary+detail 가져오기 (Gemini 호출 없음)
+                // 2) 캐시 있으면 즉시 반환, 없으면 Gemini 분석 후 캐시 저장
                 const href = latest.filing.finalLink || latest.filing.link;
                 const p = new URLSearchParams({
                     url: href,
                     formType: latest.filing.formType,
                     detail: 'true',
-                    cache_only: 'true',
                 });
                 return fetch(`/api/sec-filings/summary?${p}`)
                     .then(r => r.ok ? r.json() : null)

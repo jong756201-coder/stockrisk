@@ -11,6 +11,7 @@ import InsiderTradingSection from '@/components/InsiderTradingSection';
 import FutureEventsSection from '@/components/FutureEventsSection';
 import SecFilingsSection from '@/components/SecFilingsSection';
 import LatestFilingCard from '@/components/LatestFilingCard';
+import PriceHistorySection from '@/components/PriceHistorySection';
 import { getKoreanNames } from '@/lib/api/koreanNames';
 
 export const dynamic = 'force-dynamic'; // 테스트 중: 캐싱 비활성화
@@ -34,13 +35,6 @@ export default async function TickerPage({
     .eq('symbol', uppercaseSymbol)
     .in('status', ['published', 'pending_review']) // Show both for MVP demo purposes
     .order('extracted_at', { ascending: false });
-
-  // Fetch similar stats
-  const { data: stats } = await supabase
-    .from('similar_case_stats')
-    .select('*')
-    .eq('symbol', uppercaseSymbol)
-    .limit(3);
 
   const englishName = ticker?.company_name ?? uppercaseSymbol;
   const [realityData, chartData, krwRate, quotesMap, newsItems, koreanNamesMap] = await Promise.all([
@@ -148,6 +142,8 @@ export default async function TickerPage({
       {/* 0.7 Reality Check */}
       <RealityCheckPanel data={realityData} symbol={uppercaseSymbol} krwRate={krwRate} />
 
+      {/* 0.8 과거 폭등/폭락 이력 */}
+      <PriceHistorySection symbol={uppercaseSymbol} />
 
       {/* 1. Evidence & Risks Section */}
       <section className="mb-6 space-y-4">
@@ -159,10 +155,7 @@ export default async function TickerPage({
         {/* SEC AI 리스크 분석 (Gemini) — 자본조달이력, 계속기업 불확실성 등 */}
         <SecRiskFactors symbol={uppercaseSymbol} />
 
-        {!evidence || evidence.length === 0 ? (
-          <p className="text-sm text-gray-500 p-4 bg-white rounded-xl border border-gray-100">발견된 리스크/근거 데이터가 없습니다.</p>
-        ) : (
-          evidence.map((ev) => (
+        {evidence && evidence.length > 0 && evidence.map((ev) => (
             <div key={ev.id} className="bg-white rounded-xl shadow-sm p-5 border-l-4 border-l-red-600">
               <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-[10px] font-bold rounded mb-2">
                 {ev.category.toUpperCase()}
@@ -183,53 +176,7 @@ export default async function TickerPage({
               </a>
             </div>
           ))
-        )}
-      </section>
-
-      {/* 2. Similar Case Stats Section */}
-      <section className="mb-6 space-y-3">
-        <h2 className="text-lg font-bold flex items-center">
-          <span className="w-1.5 h-4 bg-blue-600 mr-2 rounded-sm"></span>
-          과거 유사 사례 결말
-        </h2>
-
-        {!stats || stats.length === 0 ? (
-          <p className="text-sm text-gray-500 p-4 bg-white rounded-xl border border-gray-100">유사 과거 사례 데이터가 없습니다.</p>
-        ) : (
-          stats.map((stat) => (
-            <div key={stat.id} className="bg-white rounded-xl shadow-sm p-5 border border-gray-200">
-              <p className="text-xs font-bold text-gray-500 mb-1">유사 종목: <span className="text-black">{stat.reference_symbol}</span></p>
-              <h3 className="font-bold text-sm mb-4 leading-snug">"{stat.similarity_reason}"</h3>
-
-              <div className="grid grid-cols-3 gap-2 text-center mb-4">
-                <div className="bg-gray-50 py-2 rounded border border-gray-100">
-                  <p className="text-[10px] text-gray-500">T+1일</p>
-                  <p className={`font-black text-sm ${stat.outcome_t_plus_1 > 0 ? 'text-red-500' : 'text-blue-500'}`}>
-                    {stat.outcome_t_plus_1 > 0 ? '+' : ''}{stat.outcome_t_plus_1}%
-                  </p>
-                </div>
-                <div className="bg-gray-50 py-2 rounded border border-gray-100">
-                  <p className="text-[10px] text-gray-500">T+7일</p>
-                  <p className={`font-black text-sm ${stat.outcome_t_plus_7 > 0 ? 'text-red-500' : 'text-blue-500'}`}>
-                    {stat.outcome_t_plus_7 > 0 ? '+' : ''}{stat.outcome_t_plus_7}%
-                  </p>
-                </div>
-                <div className="bg-gray-50 py-2 rounded border border-gray-100">
-                  <p className="text-[10px] text-gray-500">T+30일</p>
-                  <p className={`font-black text-sm ${stat.outcome_t_plus_30 > 0 ? 'text-red-500' : 'text-blue-500'}`}>
-                    {stat.outcome_t_plus_30 > 0 ? '+' : ''}{stat.outcome_t_plus_30}%
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-1 flex-wrap">
-                {stat.ultimate_outcome_tags?.map((tag: string, i: number) => (
-                  <span key={i} className="text-[10px] bg-black text-white px-2 py-0.5 rounded-full font-bold">#{tag}</span>
-                ))}
-              </div>
-            </div>
-          ))
-        )}
+        }
       </section>
 
       {/* 3. Latest News */}

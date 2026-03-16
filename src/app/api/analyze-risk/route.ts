@@ -32,8 +32,8 @@ const responseSchema: Schema = {
         shell_recycling: {
             type: SchemaType.OBJECT,
             properties: {
-                exists: { type: SchemaType.BOOLEAN, description: "잦은 사명 변경, Item 4.01(회계법인 변경) 등 껍데기 돌려막기 징후 여부" },
-                summary: { type: SchemaType.STRING, description: "징후 요약 (한국어). 없으면 빈 문자열." }
+                exists: { type: SchemaType.BOOLEAN, description: "3년 이내 2회 이상 사명 변경 + 사업 내용 완전 교체, 또는 2년 내 회계법인 2회 이상 교체 등 명백한 껍데기 돌려막기 징후 여부. 단순 지주회사 전환, 1회성 리브랜딩, 정상적 M&A는 해당하지 않음." },
+                summary: { type: SchemaType.STRING, description: "명백한 징후가 있을 때만 요약 (한국어). 없으면 반드시 빈 문자열." }
             },
             required: ["exists", "summary"]
         },
@@ -121,7 +121,7 @@ const getCachedRiskAnalysis = unstable_cache(
 
 A. delisting_risk: 8-K 문서 내에 Item 3.01(상장폐지/규정 위반 통보) 존재 여부 (true/false) 및 사유 요약.
 B. going_concern: 10-K/10-Q 내에 '계속기업 불확실성(Going concern)' 또는 'substantial doubt about ability to continue as a going concern' 명시 여부 (true/false).
-C. shell_recycling: 잦은 사명 변경이나 Item 4.01(회계법인 변경) 등 껍데기 회사 돌려막기 징후 요약.
+C. shell_recycling: 명백한 껍데기 회사 돌려막기 징후만 보고하라. 다음 조건 중 하나 이상을 충족해야 exists=true: (1) 3년 이내 사명을 2회 이상 변경하면서 사업 내용이 완전히 바뀐 경우, (2) 2년 이내 회계법인을 2회 이상 교체한 경우. 단순 지주회사 전환(holding company reorganization), 1회성 리브랜딩, 정상적인 M&A에 따른 사명 변경은 껍데기 돌려막기가 아니므로 exists=false로 판단하라.
 D. offering_history: 제공된 문서 목록에 S-3, 424B5, S-1 공시가 **실제로 존재하는 경우에만** 횟수와 조달 규모를 한국어 한 줄로 요약하라. 해당 공시가 전혀 없다면 반드시 빈 문자열("")을 반환하고 추측하거나 추정하지 마라.
 E. dilution_warning: 10-K, S-3, 424B 문서에서 워런트(warrants), 전환사채(convertible notes), 스톡옵션(stock options) 등 잠재적 희석 주식 총합이 현재 유통주식(shares outstanding) 대비 50%를 초과하는지 판단하라. 문서에 숫자가 명시된 경우에만 판단하고, 없으면 exists=false.
 F. audit_opinion: 10-K 감사보고서(auditor's report)에서 다음 중 하나 이상이 명시된 경우 exists=true: "qualified opinion"(한정의견), "adverse opinion"(부적정의견), "disclaimer of opinion"(의견거절), "material weakness"(중요한 취약점), "significant deficiency". 없거나 "unqualified opinion"(적정의견)이면 exists=false.

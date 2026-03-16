@@ -132,7 +132,7 @@ export class FMPService {
      */
     static async getSecFilings(symbol: string, type: string = '8-K', limit: number = 3) {
         if (!API_KEY) throw new Error('FMP_API_KEY is not set');
-        const url = `${FMP_BASE_URL}/sec_filings?symbol=${symbol}&type=${type}&page=0&apikey=${API_KEY}`;
+        const url = `${FMP_BASE_URL}/sec-filings-search/symbol?symbol=${symbol}&page=0&limit=${limit}&apikey=${API_KEY}`;
         const res = await fetch(url, { next: { revalidate: 3600 } });
 
         if (!res.ok) {
